@@ -6,7 +6,7 @@
 
 1.安装[.NET8运行库](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)。
 
-2.在[Releases](https://github.com/FuBangkun/GalacticraftTools/releases)下载最新版本的可执行文件，不用下载PDB文件。
+2.在[Releases](https://github.com/FuBangkun/GalacticraftTools/releases)下载最新版本的程序。
 
 3.安装你要玩的星系附属，并启动游戏，以生成配置文件（必须启动，不然没有配置文件无法使用本工具）
 
