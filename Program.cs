@@ -18,6 +18,7 @@ class Program
 
     static void Main(string[] args)
     {
+<<<<<<< HEAD
         if (Path.GetFileNameWithoutExtension(ParentDir) != "config")
         {
             Console.WriteLine("程序不在config文件夹下");
@@ -26,12 +27,36 @@ class Program
             return;
         }
         Console.CursorVisible = false;
+=======
+        Console.Title = "星系附属兼容问题解决工具";
+        if (Path.GetFileNameWithoutExtension(ParentDir) != "config")
+        {
+            Console.WriteLine("程序不在config文件夹下");
+            Console.WriteLine("请输入config文件夹所在路径");
+
+            string input = Console.ReadLine();
+            while (Path.GetFileNameWithoutExtension(input) != "config")
+            {
+                Console.WriteLine("路径错误，请输入config文件夹的正确路径");
+                input = Console.ReadLine();
+            }
+            ParentDir = input;
+        }
+        Console.CursorVisible = false;
+        Console.Clear();
+        Console.WriteLine("欢迎使用星系附属兼容问题解决工具 v1.0.1\n\n工具简介：\n本工具由MC百科站友付邦坤（个人主页：https://center.mcmod.cn/157477/）打造，并在MC百科社群（https://bbs.mcmod.cn/thread-19017-1-1.html）发布。该工具旨在解决我的世界星系模组附属间的兼容性问题，提升游戏体验。\n\n免费声明：\n本工具完全免费，我们鼓励大家自由使用并分享给更多需要的玩家。但请注意，本工具严禁用于任何商业用途。若您不慎通过购买方式获取，请立即联系退款。\n\n支持列表：\n本工具目前支持以下星系附属模组：星空、额外行星、更多行星、太阳系、AsmodeusCore。对于其他附属模组，基本不会造成兼容问题，因此无需特别处理。\n\n已知问题：\n由于太阳系模组本身的注册系统特性，可能导致游戏崩溃。本工具仅负责修改太阳系的星图配置，无法从根本上解决崩溃问题。\n\n未来计划：\n我们计划在未来版本中移除重复天体，并增加对Minecraft 1.7.10版本的支持，敬请期待。\n\n感谢与支持：\n如果您觉得本工具对您有所帮助，请在本工具Github仓库（https://github.com/FuBangkun/GalacticraftTools）上给予本工具一个Star以表示支持，这将是我们继续前进的动力。感谢您的理解与支持！");
+        Console.WriteLine("\n按下任意键继续...");
+        Console.ReadKey();
+>>>>>>> 3ec6d6d (1.0.1-a)
         DrawMenu(Options1, selectedIndex1);
 
         while (true)
         {
             var key = Console.ReadKey(true);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3ec6d6d (1.0.1-a)
             switch (Index)
             {
                 case 1:
@@ -420,6 +445,7 @@ class Program
         }
     }
 
+<<<<<<< HEAD
     static void DrawMenu(string[] options, int selectedIndex)
     {
         string prompt = string.Empty;
@@ -440,6 +466,30 @@ class Program
                 break;
         }
         Console.WriteLine(prompt);
+=======
+    static string GetPrompt(int index)
+    {
+        switch (index)
+        {
+            case 1:
+                return "选择安装的附属\nESC退出 SPACE选择/取消 上下箭头切换选项 ENTER确认选择";
+            case 2:
+                return "选择星图\nESC返回 上下箭头切换选项 ENTER确认选择";
+            case 3:
+                return "选择火星空间站\nESC返回 上下箭头切换选项 ENTER确认选择";
+            case 4:
+                return "选择金星空间站\nESC返回 上下箭头切换选项 ENTER确认选择";
+            default:
+                return string.Empty;
+        }
+    }
+
+    static void DrawMenu(string[] options, int selectedIndex)
+    {
+        string prefix = string.Empty;
+        Console.Clear();
+        Console.WriteLine(GetPrompt(Index));
+>>>>>>> 3ec6d6d (1.0.1-a)
         for (int i = 0; i < options.Length; i++)
         {
             if (Index == 1)
@@ -463,6 +513,10 @@ class Program
         Console.ResetColor();
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3ec6d6d (1.0.1-a)
     static void ToggleSelection(string[] options)
     {
         if (selectedOptions.Contains(options[selectedIndex1]))
