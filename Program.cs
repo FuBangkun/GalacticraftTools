@@ -12,12 +12,14 @@ class Program
     static string[] Options4 = { "星空", "额外行星" };
     static string[] Options5 = { "是", "否" };
     static string[] Options6 = { "是", "否" };
+    static string[] Options7 = { "是", "否" };
     static int selectedIndex1 = 0;
     static int selectedIndex2 = 0;
     static int selectedIndex3 = 0;
     static int selectedIndex4 = 0;
     static int selectedIndex5 = 0;
     static int selectedIndex6 = 0;
+    static int selectedIndex7 = 0;
     static int Index = 1;
 
     static void Main(string[] args)
@@ -157,8 +159,12 @@ class Program
                             {
                                 if (selectedOptions.Contains("额外行星"))
                                 {
-                                    Modify(2);
-                                    break;
+                                    if (selectedOptions.Contains("AsmodeusCore"))
+                                    {
+                                        Index = 7;
+                                        selectedIndex7 = 0;
+                                        DrawMenu(Options7, selectedIndex7);
+                                    }
                                 }
                                 if (selectedOptions.Contains("星空"))
                                 {
@@ -256,7 +262,39 @@ class Program
                             break;
                         case ConsoleKey.Enter:
                             Console.Clear();
-                            Modify(6);
+                            Index = 7;
+                            selectedIndex7 = 0;
+                            DrawMenu(Options7, selectedIndex7);
+                            break;
+                    }
+                    break;
+                case 7:
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex7 = (selectedIndex7 - 1 + Options7.Length) % Options7.Length;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedIndex7 = (selectedIndex7 + 1) % Options7.Length;
+                            break;
+                        case ConsoleKey.Escape:
+                            Console.ResetColor();
+                            if (selectedOptions.Contains("星空"))
+                            {
+                                Index = 6;
+                                selectedIndex6 = 0;
+                                DrawMenu(Options6, selectedIndex6);
+                            }
+                            else
+                            {
+                                Index = 2;
+                                selectedIndex2 = 0;
+                                DrawMenu(Options2, selectedIndex2);
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            Console.Clear();
+                            Modify(7);
                             break;
                     }
                     break;
@@ -268,7 +306,7 @@ class Program
                     DrawMenu(Options1, selectedIndex1);
                     break;
                 case 2:
-                    DrawMenu(Options2, selectedIndex2);
+                    DrawMenu(Options2, selectedIndex2); 
                     break;
                 case 3:
                     DrawMenu(Options3, selectedIndex3);
@@ -282,6 +320,9 @@ class Program
                 case 6:
                     DrawMenu(Options6, selectedIndex6);
                     break;
+                case 7:
+                    DrawMenu(Options7, selectedIndex7);
+                    break;
             }
         }
     }
@@ -293,18 +334,8 @@ class Program
         if (key.Key == ConsoleKey.Escape)
         {
             Console.ResetColor();
-            Index = index;
-            switch (index)
-            {
-                case 2:
-                    selectedIndex2 = 0;
-                    DrawMenu(Options2, selectedIndex2);
-                    break;
-                case 6:
-                    selectedIndex6 = 0;
-                    DrawMenu(Options6, selectedIndex6);
-                    break;
-            }
+            selectedIndex7 = 0;
+            DrawMenu(Options7, selectedIndex7);
             return;
         }
         else
@@ -464,20 +495,58 @@ class Program
                     ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Mars SpaceStation\"", true);
                     ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Venus SpaceStation\"", true);
                 }
-                if (selectedOptions.Contains("更多行星")) ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Enable More Planets Compatibility\"", true);
-                if (!selectedOptions.Contains("更多行星")) ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Enable More Planets Compatibility\"", false);
-                if (Options2[selectedIndex2] != "额外行星") ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Use Custom Galaxy Map/Celestial Selection Screen\"", false);
-                if (Options2[selectedIndex2] == "额外行星") ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Use Custom Galaxy Map/Celestial Selection Screen\"", true);
+                if (selectedOptions.Contains("更多行星"))
+                {
+                    ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Enable More Planets Compatibility\"", true);
+                }
+                else
+                {
+                    ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Enable More Planets Compatibility\"", false);
+                }
+                if (Options2[selectedIndex2] == "额外行星")
+                {
+                    ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Use Custom Galaxy Map/Celestial Selection Screen\"", true);
+                }
+                else
+                {
+                    ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Use Custom Galaxy Map/Celestial Selection Screen\"", false);
+                }
             }
             if (selectedOptions.Contains("AsmodeusCore"))
             {
-                if (Options2[selectedIndex2] != "AsmodeusCore（星空）") ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableNewGalaxyMap", false);
-                if (Options2[selectedIndex2] == "AsmodeusCore（星空）") ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableNewGalaxyMap", true);
+                if (Options2[selectedIndex2] == "AsmodeusCore（星空）")
+                {
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableNewGalaxyMap", true);
+                }
+                else
+                {
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableNewGalaxyMap", false);
+                }
+                if (Options7[selectedIndex7] == "是")
+                {
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyAsteroids", false);
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyMoon", false);
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyOverworld", false);
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyOverworldOrbit", false);
+                }
+                else
+                {
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyAsteroids", true);
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyMoon", true);
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyOverworld", true);
+                    ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyOverworldOrbit", true);
+                }
             }
             if (selectedOptions.Contains("太阳系"))
             {
-                if (Options2[selectedIndex2] != "太阳系") ModifyBool(ParentDir + "\\Sol\\sol.conf", "B:\"Enable Custom Galaxymap?\"", false);
-                if (Options2[selectedIndex2] == "太阳系") ModifyBool(ParentDir + "\\Sol\\sol.conf", "B:\"Enable Custom Galaxymap?\"", true);
+                if (Options2[selectedIndex2] == "太阳系")
+                {
+                    ModifyBool(ParentDir + "\\Sol\\sol.conf", "B:\"Enable Custom Galaxymap?\"", true);
+                }
+                else
+                {
+                    ModifyBool(ParentDir + "\\Sol\\sol.conf", "B:\"Enable Custom Galaxymap?\"", false);
+                }
             }
             if (selectedOptions.Contains("星空"))
             {
@@ -486,7 +555,7 @@ class Program
                     ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableMarsSpaceStation", true);
                     ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableVenusSpaceStation", true);
                 }
-                if (selectedIndex5 == 0)
+                if (Options5[selectedIndex5] == "是")
                 {
                     ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableNewMenu", true);
                 }
@@ -494,7 +563,7 @@ class Program
                 {
                     ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableNewMenu", false);
                 }
-                if (selectedIndex6 == 0)
+                if (Options6[selectedIndex6] == "是")
                 {
                     ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableAdvancedRocketCraft", true);
                 }
@@ -533,6 +602,8 @@ class Program
                 return "是否启用星空新主菜单\nESC返回 上下箭头切换选项 ENTER确认选择";
             case 6:
                 return "是否启用星空2~6阶困难火箭配方\nESC返回 上下箭头切换选项 ENTER确认选择";
+            case 7:
+                return "是否要安装光影（仅防止与光影存在冲突，不会下载光影）\nESC返回 上下箭头切换选项 ENTER确认选择";
             default:
                 return "加载错误";
         }
