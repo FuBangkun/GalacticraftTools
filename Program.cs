@@ -10,10 +10,14 @@ class Program
     static string[] Options2 = { "星系" };
     static string[] Options3 = { "星空", "额外行星" };
     static string[] Options4 = { "星空", "额外行星" };
+    static string[] Options5 = { "是", "否" };
+    static string[] Options6 = { "是", "否" };
     static int selectedIndex1 = 0;
     static int selectedIndex2 = 0;
     static int selectedIndex3 = 0;
     static int selectedIndex4 = 0;
+    static int selectedIndex5 = 0;
+    static int selectedIndex6 = 0;
     static int Index = 1;
 
     static void Main(string[] args)
@@ -142,14 +146,27 @@ class Program
                             break;
                         case ConsoleKey.Enter:
                             Console.Clear();
-                            if (!selectedOptions.Contains("星空") || !selectedOptions.Contains("额外行星"))
+                            if (selectedOptions.Contains("额外行星") && selectedOptions.Contains("星空"))
                             {
-                                Modify(2);
+                                Index = 3;
+                                selectedIndex3 = 0;
+                                DrawMenu(Options3, selectedIndex3);
                                 break;
                             }
-                            Index = 3;
-                            selectedIndex3 = 0;
-                            DrawMenu(Options3, selectedIndex3);
+                            else
+                            {
+                                if (selectedOptions.Contains("额外行星"))
+                                {
+                                    Modify(2);
+                                    break;
+                                }
+                                if (selectedOptions.Contains("星空"))
+                                {
+                                    Index = 5;
+                                    selectedIndex5 = 0;
+                                    DrawMenu(Options5, selectedIndex5);
+                                }
+                            }
                             break;
                     }
                     break;
@@ -193,7 +210,53 @@ class Program
                             break;
                         case ConsoleKey.Enter:
                             Console.Clear();
-                            Modify(4);
+                            Index = 5;
+                            selectedIndex5 = 0;
+                            DrawMenu(Options5, selectedIndex5);
+                            break;
+                    }
+                    break;
+                case 5:
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex5 = (selectedIndex5 - 1 + Options5.Length) % Options5.Length;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedIndex5 = (selectedIndex5 + 1) % Options5.Length;
+                            break;
+                        case ConsoleKey.Escape:
+                            Console.ResetColor();
+                            Index = 4;
+                            selectedIndex4 = 0;
+                            DrawMenu(Options4, selectedIndex4);
+                            break;
+                        case ConsoleKey.Enter:
+                            Console.Clear();
+                            Index = 6;
+                            selectedIndex6 = 0;
+                            DrawMenu(Options6, selectedIndex6);
+                            break;
+                    }
+                    break;
+                case 6:
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex6 = (selectedIndex6 - 1 + Options6.Length) % Options6.Length;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedIndex6 = (selectedIndex6 + 1) % Options6.Length;
+                            break;
+                        case ConsoleKey.Escape:
+                            Console.ResetColor();
+                            Index = 5;
+                            selectedIndex5 = 0;
+                            DrawMenu(Options5, selectedIndex5);
+                            break;
+                        case ConsoleKey.Enter:
+                            Console.Clear();
+                            Modify(6);
                             break;
                     }
                     break;
@@ -213,6 +276,12 @@ class Program
                 case 4:
                     DrawMenu(Options4, selectedIndex4);
                     break;
+                case 5:
+                    DrawMenu(Options5, selectedIndex5);
+                    break;
+                case 6:
+                    DrawMenu(Options6, selectedIndex6);
+                    break;
             }
         }
     }
@@ -225,15 +294,16 @@ class Program
         {
             Console.ResetColor();
             Index = index;
-            if (index == 2)
+            switch (index)
             {
-                selectedIndex2 = 0;
-                DrawMenu(Options2, selectedIndex2);
-            }
-            else
-            {
-                selectedIndex4 = 0;
-                DrawMenu(Options4, selectedIndex4);
+                case 2:
+                    selectedIndex2 = 0;
+                    DrawMenu(Options2, selectedIndex2);
+                    break;
+                case 6:
+                    selectedIndex6 = 0;
+                    DrawMenu(Options6, selectedIndex6);
+                    break;
             }
             return;
         }
@@ -392,7 +462,7 @@ class Program
                 {
                     ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Enable Galaxy Space Compatibility\"", false);
                     ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Mars SpaceStation\"", true);
-                    ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:enableVenusSpaceStation", true);
+                    ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Venus SpaceStation\"", true);
                 }
                 if (selectedOptions.Contains("更多行星")) ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Enable More Planets Compatibility\"", true);
                 if (!selectedOptions.Contains("更多行星")) ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Enable More Planets Compatibility\"", false);
@@ -415,6 +485,22 @@ class Program
                 {
                     ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableMarsSpaceStation", true);
                     ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableVenusSpaceStation", true);
+                }
+                if (selectedIndex5 == 0)
+                {
+                    ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableNewMenu", true);
+                }
+                else
+                {
+                    ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableNewMenu", false);
+                }
+                if (selectedIndex6 == 0)
+                {
+                    ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableAdvancedRocketCraft", true);
+                }
+                else
+                {
+                    ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableAdvancedRocketCraft", false);
                 }
             }
             if (error != 0)
@@ -443,6 +529,10 @@ class Program
                 return "选择火星空间站\nESC返回 上下箭头切换选项 ENTER确认选择";
             case 4:
                 return "选择金星空间站\nESC返回 上下箭头切换选项 ENTER确认选择";
+            case 5:
+                return "是否启用星空新主菜单\nESC返回 上下箭头切换选项 ENTER确认选择";
+            case 6:
+                return "是否启用星空2~6阶困难火箭配方\nESC返回 上下箭头切换选项 ENTER确认选择";
             default:
                 return "加载错误";
         }
@@ -450,7 +540,7 @@ class Program
 
     static void DrawMenu(string[] options, int selectedIndex)
     {
-        string prefix = "加载错误";
+        string prefix = string.Empty;
         Console.Clear();
         Console.WriteLine(GetPrompt(Index));
         for (int i = 0; i < options.Length; i++)
