@@ -9,10 +9,7 @@ class Program
     static string[] Options1 = { "额外行星", "星空", "更多行星", "太阳系", "AsmodeusCore" };
     static string[] Options2 = { "星系" };
     static string[] Options3 = { "星空", "额外行星" };
-    static string[] Options4 = { "星空", "额外行星" };
-    static string[] Options5 = { "是", "否" };
-    static string[] Options6 = { "是", "否" };
-    static string[] Options7 = { "是", "否" };
+    static string[] Options4 = { "是", "否" };
     static int selectedIndex1 = 0;
     static int selectedIndex2 = 0;
     static int selectedIndex3 = 0;
@@ -27,21 +24,27 @@ class Program
         Console.Title = "星系附属兼容问题解决工具";
         if (Path.GetFileNameWithoutExtension(ParentDir) != "config")
         {
-            Console.WriteLine("程序不在config文件夹下");
-            Console.WriteLine("请输入config文件夹所在路径");
-
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\x1b[1m程序不在config文件夹下\x1b[0m");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\x1b[1m请输入config文件夹所在路径\x1b[0m");
+            Console.ResetColor();
             string? input = Console.ReadLine();
             while (input == null || Path.GetFileNameWithoutExtension(input) != "config")
             {
-                Console.WriteLine("路径错误，请输入config文件夹的正确路径");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\x1b[1m路径错误，请输入config文件夹的正确路径\x1b[0m");
+                Console.ResetColor();
                 input = Console.ReadLine();
             }
             ParentDir = input;
         }
         Console.CursorVisible = false;
         Console.Clear();
-        Console.WriteLine("欢迎使用星系附属兼容问题解决工具 v1.0.1\n\n工具简介：\n本工具由MC百科站友付邦坤（个人主页：https://center.mcmod.cn/157477/）打造，并在MC百科社群（https://bbs.mcmod.cn/thread-19017-1-1.html）发布。该工具旨在解决我的世界星系模组附属间的兼容性问题，提升游戏体验。\n\n免费声明：\n本工具完全免费，我们鼓励大家自由使用并分享给更多需要的玩家。但请注意，本工具严禁用于任何商业用途。若您不慎通过购买方式获取，请立即联系退款。\n\n支持列表：\n本工具目前支持以下星系附属模组：星空、额外行星、更多行星、太阳系、AsmodeusCore。对于其他附属模组，基本不会造成兼容问题，因此无需特别处理。\n\n已知问题：\n由于太阳系模组本身的注册系统特性，可能导致游戏崩溃。本工具仅负责修改太阳系的星图配置，无法从根本上解决崩溃问题。\n\n未来计划：\n我们计划在未来版本中移除重复天体，并增加对Minecraft 1.7.10版本的支持，敬请期待。暂时可以参考此文进行修改：https://www.mcmod.cn/post/2728.html\n\n感谢与支持：\n如果您觉得本工具对您有所帮助，请在本工具Github仓库（https://github.com/FuBangkun/GalacticraftTools）上给予本工具一个Star以表示支持，这将是我们继续前进的动力。感谢您的理解与支持！");
+        Console.WriteLine("欢迎使用星系附属兼容问题解决工具 v1.0.1\n\n工具简介：\n本工具由付邦坤（MC百科主页：https://center.mcmod.cn/157477/）制作，并在MC百科社群（https://bbs.mcmod.cn/thread-19017-1-1.html）发布。该工具旨在解决星系附属模组间的兼容问题，提升游戏体验。\n\n免费声明：\n本工具完全免费，我们鼓励大家自由使用并分享给更多需要的玩家。但请注意，本工具严禁用于任何商业用途。若您不慎通过购买方式获取，请立即联系退款。\n\n支持列表：\n本工具目前支持以下星系附属模组：星空、额外行星、更多行星、太阳系、AsmodeusCore。对于其他附属模组，基本不会造成兼容问题，因此无需特别处理。\n\n已知问题：\n由于太阳系模组本身的注册系统特性，可能导致游戏崩溃。本工具仅负责修改太阳系的星图配置，无法从根本上解决崩溃问题。\n\n未来计划：\n我们计划在未来版本中移除重复天体，并增加对Minecraft 1.7.10版本的支持，敬请期待。暂时可以参考此文进行修改：https://www.mcmod.cn/post/2728.html\n\n感谢与支持：\n如果您觉得本工具对您有所帮助，请在本工具Github仓库（https://github.com/FuBangkun/GalacticraftTools）上给予本工具一个Star以表示支持，这将是我们继续前进的动力。感谢您的理解与支持！");
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("\n按下任意键继续...");
+        Console.ResetColor();
         Console.ReadKey();
         DrawMenu(Options1, selectedIndex1);
 
@@ -63,22 +66,28 @@ class Program
                             ToggleSelection(Options1);
                             break;
                         case ConsoleKey.Escape:
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("\x1b[1m按下任意键确定退出\x1b[0m");
+                            Console.ResetColor();
+                            Console.ReadKey();
                             Environment.Exit(0);
                             return;
                         case ConsoleKey.Enter:
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Red;
-                            if (selectedOptions.Count == 0)
-                            {
-                                Console.WriteLine("你没有选择任何东西");
-                                Console.WriteLine("按下任意键返回");
-                                Console.ResetColor();
-                                continue;
-                            }
                             if (selectedOptions.Count < 2)
                             {
-                                Console.WriteLine("请选择至少两个模组");
-                                Console.WriteLine("按下任意键返回");
+                                if (selectedOptions.Count == 0)
+                                {
+                                    Console.WriteLine("\x1b[1m你没有选择任何东西\x1b[0m");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\x1b[1m请选择至少两个模组\x1b[0m");
+                                }
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("\n按下任意键返回");
                                 Console.ResetColor();
                                 continue;
                             }
@@ -120,13 +129,13 @@ class Program
                             if (errorCount > 0)
                             {
                                 Console.WriteLine($"{errorCount}个错误");
-                                Console.ResetColor();
+                                Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("按下任意键退出");
+                                Console.ResetColor();
                                 Console.ReadKey();
                                 return;
                             }
                             Index = 2;
-                            selectedIndex2 = 0;
                             DrawMenu(Options2, selectedIndex2);
                             break;
                     }
@@ -143,7 +152,6 @@ class Program
                         case ConsoleKey.Escape:
                             Console.ResetColor();
                             Index = 1;
-                            selectedIndex1 = 0;
                             DrawMenu(Options1, selectedIndex1);
                             break;
                         case ConsoleKey.Enter:
@@ -151,7 +159,6 @@ class Program
                             if (selectedOptions.Contains("额外行星") && selectedOptions.Contains("星空"))
                             {
                                 Index = 3;
-                                selectedIndex3 = 0;
                                 DrawMenu(Options3, selectedIndex3);
                                 break;
                             }
@@ -162,15 +169,13 @@ class Program
                                     if (selectedOptions.Contains("AsmodeusCore"))
                                     {
                                         Index = 7;
-                                        selectedIndex7 = 0;
-                                        DrawMenu(Options7, selectedIndex7);
+                                        DrawMenu(Options4, selectedIndex7);
                                     }
                                 }
                                 if (selectedOptions.Contains("星空"))
                                 {
                                     Index = 5;
-                                    selectedIndex5 = 0;
-                                    DrawMenu(Options5, selectedIndex5);
+                                    DrawMenu(Options4, selectedIndex5);
                                 }
                             }
                             break;
@@ -188,14 +193,12 @@ class Program
                         case ConsoleKey.Escape:
                             Console.ResetColor();
                             Index = 2;
-                            selectedIndex2 = 0;
                             DrawMenu(Options2, selectedIndex2);
                             break;
                         case ConsoleKey.Enter:
                             Console.Clear();
                             Index = 4;
-                            selectedIndex4 = 0;
-                            DrawMenu(Options4, selectedIndex4);
+                            DrawMenu(Options3, selectedIndex4);
                             break;
                     }
                     break;
@@ -203,22 +206,20 @@ class Program
                     switch (key.Key)
                     {
                         case ConsoleKey.UpArrow:
-                            selectedIndex4 = (selectedIndex4 - 1 + Options4.Length) % Options4.Length;
+                            selectedIndex4 = (selectedIndex4 - 1 + Options3.Length) % Options3.Length;
                             break;
                         case ConsoleKey.DownArrow:
-                            selectedIndex4 = (selectedIndex4 + 1) % Options4.Length;
+                            selectedIndex4 = (selectedIndex4 + 1) % Options3.Length;
                             break;
                         case ConsoleKey.Escape:
                             Console.ResetColor();
                             Index = 3;
-                            selectedIndex3 = 0;
                             DrawMenu(Options3, selectedIndex3);
                             break;
                         case ConsoleKey.Enter:
                             Console.Clear();
                             Index = 5;
-                            selectedIndex5 = 0;
-                            DrawMenu(Options5, selectedIndex5);
+                            DrawMenu(Options4, selectedIndex5);
                             break;
                     }
                     break;
@@ -226,22 +227,20 @@ class Program
                     switch (key.Key)
                     {
                         case ConsoleKey.UpArrow:
-                            selectedIndex5 = (selectedIndex5 - 1 + Options5.Length) % Options5.Length;
+                            selectedIndex5 = (selectedIndex5 - 1 + Options4.Length) % Options4.Length;
                             break;
                         case ConsoleKey.DownArrow:
-                            selectedIndex5 = (selectedIndex5 + 1) % Options5.Length;
+                            selectedIndex5 = (selectedIndex5 + 1) % Options4.Length;
                             break;
                         case ConsoleKey.Escape:
                             Console.ResetColor();
                             Index = 4;
-                            selectedIndex4 = 0;
-                            DrawMenu(Options4, selectedIndex4);
+                            DrawMenu(Options3, selectedIndex4);
                             break;
                         case ConsoleKey.Enter:
                             Console.Clear();
                             Index = 6;
-                            selectedIndex6 = 0;
-                            DrawMenu(Options6, selectedIndex6);
+                            DrawMenu(Options4, selectedIndex6);
                             break;
                     }
                     break;
@@ -249,22 +248,20 @@ class Program
                     switch (key.Key)
                     {
                         case ConsoleKey.UpArrow:
-                            selectedIndex6 = (selectedIndex6 - 1 + Options6.Length) % Options6.Length;
+                            selectedIndex6 = (selectedIndex6 - 1 + Options4.Length) % Options4.Length;
                             break;
                         case ConsoleKey.DownArrow:
-                            selectedIndex6 = (selectedIndex6 + 1) % Options6.Length;
+                            selectedIndex6 = (selectedIndex6 + 1) % Options4.Length;
                             break;
                         case ConsoleKey.Escape:
                             Console.ResetColor();
                             Index = 5;
-                            selectedIndex5 = 0;
-                            DrawMenu(Options5, selectedIndex5);
+                            DrawMenu(Options4, selectedIndex5);
                             break;
                         case ConsoleKey.Enter:
                             Console.Clear();
                             Index = 7;
-                            selectedIndex7 = 0;
-                            DrawMenu(Options7, selectedIndex7);
+                            DrawMenu(Options4, selectedIndex7);
                             break;
                     }
                     break;
@@ -272,23 +269,21 @@ class Program
                     switch (key.Key)
                     {
                         case ConsoleKey.UpArrow:
-                            selectedIndex7 = (selectedIndex7 - 1 + Options7.Length) % Options7.Length;
+                            selectedIndex7 = (selectedIndex7 - 1 + Options4.Length) % Options4.Length;
                             break;
                         case ConsoleKey.DownArrow:
-                            selectedIndex7 = (selectedIndex7 + 1) % Options7.Length;
+                            selectedIndex7 = (selectedIndex7 + 1) % Options4.Length;
                             break;
                         case ConsoleKey.Escape:
                             Console.ResetColor();
                             if (selectedOptions.Contains("星空"))
                             {
                                 Index = 6;
-                                selectedIndex6 = 0;
-                                DrawMenu(Options6, selectedIndex6);
+                                DrawMenu(Options4, selectedIndex6);
                             }
                             else
                             {
                                 Index = 2;
-                                selectedIndex2 = 0;
                                 DrawMenu(Options2, selectedIndex2);
                             }
                             break;
@@ -312,16 +307,16 @@ class Program
                     DrawMenu(Options3, selectedIndex3);
                     break;
                 case 4:
-                    DrawMenu(Options4, selectedIndex4);
+                    DrawMenu(Options3, selectedIndex4);
                     break;
                 case 5:
-                    DrawMenu(Options5, selectedIndex5);
+                    DrawMenu(Options4, selectedIndex5);
                     break;
                 case 6:
-                    DrawMenu(Options6, selectedIndex6);
+                    DrawMenu(Options4, selectedIndex6);
                     break;
                 case 7:
-                    DrawMenu(Options7, selectedIndex7);
+                    DrawMenu(Options4, selectedIndex7);
                     break;
             }
         }
@@ -329,13 +324,15 @@ class Program
 
     static void Modify(int index)
     {
-        Console.WriteLine("按下任意键确认更改，ESC键返回");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("按下任意键确认更改，Escape键返回");
+        Console.ResetColor();
         var key = Console.ReadKey(true);
         if (key.Key == ConsoleKey.Escape)
         {
             Console.ResetColor();
             selectedIndex7 = 0;
-            DrawMenu(Options7, selectedIndex7);
+            DrawMenu(Options4, selectedIndex7);
             return;
         }
         else
@@ -354,7 +351,20 @@ class Program
                     {
                         string currentValue = trimmedLine.Substring((keyToFind + "=").Length).Trim();
                         lines[i] = "    " + keyToFind + $"={value.ToString().ToLower()}";
-                        Console.WriteLine($"已修改{keyToFind}为{value.ToString().ToLower()}（原值：{currentValue}）");
+
+                        Console.Write("已修改");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write($"{keyToFind}");
+                        Console.ResetColor();
+                        Console.Write("为");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write($"{value.ToString().ToLower()}");
+                        Console.ResetColor();
+                        Console.Write("，修改前的值为");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write($"{currentValue}\n");
+                        Console.ResetColor();
+
                         foundAndModified = true;
                         break;
                     }
@@ -362,7 +372,7 @@ class Program
                 if (!foundAndModified)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"无法找到{keyToFind}");
+                    Console.WriteLine($"\x1b[1m无法找到{keyToFind}\x1b[0m");
                     Console.ResetColor();
                     error++;
                 }
@@ -417,7 +427,7 @@ class Program
                 if (!foundAndModified)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"无法找到{keyToFind}");
+                    Console.WriteLine($"\x1b[1m无法找到{keyToFind}\x1b[0m");
                     Console.ResetColor();
                     error++;
                 }
@@ -427,7 +437,7 @@ class Program
             {
                 if (selectedOptions.Contains("星空"))
                 {
-                    if (Options3[selectedIndex3] == "星空")
+                    if (selectedIndex3 == 0)
                     {
                         ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Mars SpaceStation\"", false);
                         ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableMarsSpaceStation", true);
@@ -437,7 +447,7 @@ class Program
                         ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Mars SpaceStation\"", true);
                         ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableMarsSpaceStation", false);
                     }
-                    if (Options4[selectedIndex4] == "星空")
+                    if (selectedIndex4 == 0)
                     {
                         ModifyBool(ParentDir + "\\ExtraPlanets.cfg", "B:\"Venus SpaceStation\"", false);
                         ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableVenusSpaceStation", true);
@@ -522,7 +532,7 @@ class Program
                 {
                     ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableNewGalaxyMap", false);
                 }
-                if (Options7[selectedIndex7] == "是")
+                if (selectedIndex7 == 0)
                 {
                     ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyAsteroids", false);
                     ModifyBool(ParentDir + "\\AsmodeusCore\\core.conf", "B:enableSkyMoon", false);
@@ -555,7 +565,7 @@ class Program
                     ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableMarsSpaceStation", true);
                     ModifyBool(ParentDir + "\\GalaxySpace\\dimensions.conf", "B:enableVenusSpaceStation", true);
                 }
-                if (Options5[selectedIndex5] == "是")
+                if (selectedIndex5 == 0)
                 {
                     ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableNewMenu", true);
                 }
@@ -563,7 +573,7 @@ class Program
                 {
                     ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableNewMenu", false);
                 }
-                if (Options6[selectedIndex6] == "是")
+                if (selectedIndex6 == 0)
                 {
                     ModifyBool(ParentDir + "\\GalaxySpace\\core.conf", "B:enableAdvancedRocketCraft", true);
                 }
@@ -575,11 +585,19 @@ class Program
             if (error != 0)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{error}个错误");
+                Console.WriteLine($"\x1b[1m{error}个错误\x1b[0m");
                 Console.ResetColor();
             }
-            Console.WriteLine("\n\n更多配置请手动修改配置文件，参考：https://www.mcmod.cn/post/2728.html的解决重复天体(1.8)和解决重复天体(1.9)部分");
-            Console.WriteLine("\n\n按下任意键退出");
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\x1b[1m没有错误\x1b[0m");
+                Console.ResetColor();
+            }
+            Console.WriteLine("\n\n\x1b[1m更多配置请手动修改配置文件，参考：https://www.mcmod.cn/post/2728.html的解决重复天体(1.8)和附属加载顺序(1.9)部分\x1b[0m");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n\n按下任意键退出，记得给个Star哦");
+            Console.ResetColor();
             Console.ReadKey();
             Environment.Exit(0);
             
@@ -588,24 +606,25 @@ class Program
 
     static string GetPrompt(int index)
     {
+        string prompt = "\x1b[0m\nEscape返回 ↑↓切换选项 Enter确定\n";
         switch (index)
         {
             case 1:
-                return "选择安装的附属\nESC退出 SPACE选择/取消 上下箭头切换选项 ENTER确认选择";
+                return "\x1b[1m选择安装的附属\x1b[0m\nEscape退出 Space选择/取消 ↑↓切换选项 Enter确定\n";
             case 2:
-                return "选择星图\nESC返回 上下箭头切换选项 ENTER确认选择";
+                return "\x1b[1m选择星图" + prompt;
             case 3:
-                return "选择火星空间站\nESC返回 上下箭头切换选项 ENTER确认选择";
+                return "\x1b[1m选择火星空间站" + prompt;
             case 4:
-                return "选择金星空间站\nESC返回 上下箭头切换选项 ENTER确认选择";
+                return "\x1b[1m选择金星空间站" + prompt;
             case 5:
-                return "是否启用星空新主菜单\nESC返回 上下箭头切换选项 ENTER确认选择";
+                return "\x1b[1m是否启用星空新主菜单" + prompt;
             case 6:
-                return "是否启用星空2~6阶困难火箭配方\nESC返回 上下箭头切换选项 ENTER确认选择";
+                return "\x1b[1m是否启用星空2~6阶困难火箭配方" + prompt;
             case 7:
-                return "是否要安装光影（仅防止与光影存在冲突，不会下载光影）\nESC返回 上下箭头切换选项 ENTER确认选择";
+                return "\x1b[1m是否要安装光影（仅防止与光影存在冲突，不会下载光影）" + prompt;
             default:
-                return "加载错误";
+                return "\x1b[1m加载错误";
         }
     }
 
