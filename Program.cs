@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
 using System.Data;
+using System.IO.Compression;
 using System.Text;
 
 class Program
 {
-    static string ParentDir = System.Environment.CurrentDirectory;
+    static string ConfigPath = System.Environment.CurrentDirectory;
     static readonly List<string> selectedOptions = [];
     static readonly List<string[]> Options =
     [
@@ -16,24 +17,24 @@ class Program
     static readonly int[] selectedIndices = new int[8];
     static int Index;
     const string bold = "\x1b[1m";
-    const string red = "\x1b[31m";
-    const string green = "\x1b[32m";
-    const string yellow = "\x1b[33m";
+    const string red = $"{bold}\x1b[31m";
+    const string green = $"{bold}\x1b[32m";
+    const string yellow = $"{bold}\x1b[33m";
     const string reset = "\x1b[0m";
 
     static void Main()
     {
         Console.Title = "星系附属兼容问题解决工具";
-        if (Path.GetFileNameWithoutExtension(ParentDir) != "config")
+        if (Path.GetFileNameWithoutExtension(ConfigPath) != "config")
         {
-            Console.WriteLine($"{bold}{red}程序不在config文件夹下\n请输入config文件夹所在路径{reset}");
+            Console.WriteLine($"{red}程序不在config文件夹下\n请输入config文件夹所在路径{reset}");
             string? input = Console.ReadLine();
             while (input == null || Path.GetFileNameWithoutExtension(input) != "config")
             {
-                Console.WriteLine($"{bold}{red}路径错误，请输入config文件夹的正确路径{reset}");
+                Console.WriteLine($"{red}路径错误，请输入config文件夹的正确路径{reset}");
                 input = Console.ReadLine();
             }
-            ParentDir = input;
+            ConfigPath = input;
         }
 
         Console.CursorVisible = false;
@@ -64,7 +65,7 @@ class Program
                             break;
                         case ConsoleKey.Escape:
                             Console.Clear();
-                            Console.WriteLine($"{bold}{red}按下回车键确认退出，按其他键返回...{reset}");
+                            Console.WriteLine($"{red}按下回车键确认退出，按其他键返回...{reset}");
                             if (Console.ReadKey(true).Key == ConsoleKey.Enter) Environment.Exit(0);
                             break;
                         case ConsoleKey.Enter:
@@ -82,7 +83,7 @@ class Program
                                 if (selectedOptions.Contains(optionName))
                                 {
                                     if (addToOptions) options.Add(optionName == "AsmodeusCore" ? "AsmodeusCore（星空）" : optionName);
-                                    string fullPath = Path.Combine(ParentDir + dirModifier, fileName);
+                                    string fullPath = Path.Combine(ConfigPath + dirModifier, fileName);
                                     if (!File.Exists(fullPath))
                                     {
                                         Console.WriteLine($"未检测到{optionName}配置文件，请安装{optionName}并运行一次游戏以生成配置文件。");
@@ -165,7 +166,7 @@ class Program
             string[] lines;
             int error = 0;
 
-            void ModifyBool(string configFilePath, string keyToFind, bool value)
+            void ModifyBool(string configFilePath, string keyToFind, bool value, bool defaultValue)
             {
                 lines = File.ReadAllLines(configFilePath);
                 bool foundAndModified = false;
@@ -176,14 +177,14 @@ class Program
                     {
                         string currentValue = trimmedLine[(keyToFind + "=").Length..].Trim();
                         lines[i] = "    " + keyToFind + $"={value.ToString().ToLower()}";
-                        Console.Write($"已修改{yellow}{keyToFind}{reset}为{red}{value.ToString().ToLower()}{reset}，修改前的值为{red}{currentValue}{reset}\n");
+                        Console.Write($"已修改{yellow}{keyToFind}{reset}为{red}{value.ToString().ToLower()}{reset}，修改前为{red}{currentValue}{reset}，默认为{red}{defaultValue.ToString().ToLower()}{reset}\n");
                         foundAndModified = true;
                         break;
                     }
                 }
                 if (!foundAndModified)
                 {
-                    Console.WriteLine($"{bold}{red}无法找到{keyToFind}{reset}");
+                    Console.WriteLine($"{red}无法找到{keyToFind}{reset}");
                     error++;
                 }
                 File.WriteAllLines(configFilePath, lines);
@@ -224,7 +225,7 @@ class Program
                 }
                 if (!foundAndModified)
                 {
-                    Console.WriteLine($"{bold}{red}无法找到{keyToFind[..^2]}{reset}");
+                    Console.WriteLine($"{red}无法找到{keyToFind[..^2]}{reset}");
                     error++;
                 }
                 else Console.WriteLine($"已修改{yellow}{keyToFind[..^2]}{reset}");
@@ -235,23 +236,23 @@ class Program
             if (selectedOptions.Contains("AsmodeusCore")) ConfigureAsmodeusCore();
             if (selectedOptions.Contains("太阳系")) ConfigureSolarSystem();
             if (selectedOptions.Contains("星空")) ConfigureGalaxySpace();
-            Console.WriteLine(error != 0 ? $"{bold}{red}{error}个错误{reset}" : $"{bold}{green}没有错误{reset}");
+            Console.WriteLine(error != 0 ? $"{red}{error}个错误{reset}" : $"{green}没有错误{reset}");
 
             void ConfigureExtraPlanets()
             {
                 bool hasGalaxySpace = selectedOptions.Contains("星空");
-                string extraPlanetsConfig = $"{ParentDir}\\ExtraPlanets.cfg";
-                string galaxySpaceConfig = $"{ParentDir}\\GalaxySpace\\dimensions.conf";
+                string extraPlanetsConfig = $"{ConfigPath}\\ExtraPlanets.cfg";
+                string galaxySpaceConfig = $"{ConfigPath}\\GalaxySpace\\dimensions.conf";
 
-                ModifyBool(extraPlanetsConfig, "B:\"Enable Galaxy Space Compatibility\"", hasGalaxySpace);
+                ModifyBool(extraPlanetsConfig, "B:\"Enable Galaxy Space Compatibility\"", hasGalaxySpace, false);
 
                 if (hasGalaxySpace)
                 {
-                    ModifyBool(extraPlanetsConfig, "B:\"Mars SpaceStation\"", selectedIndices[3] != 0);
-                    ModifyBool(galaxySpaceConfig, "B:enableMarsSpaceStation", selectedIndices[3] == 0);
+                    ModifyBool(extraPlanetsConfig, "B:\"Mars SpaceStation\"", selectedIndices[3] != 0, true);
+                    ModifyBool(galaxySpaceConfig, "B:enableMarsSpaceStation", selectedIndices[3] == 0, true);
 
-                    ModifyBool(extraPlanetsConfig, "B:\"Venus SpaceStation\"", selectedIndices[4] != 0);
-                    ModifyBool(galaxySpaceConfig, "B:enableVenusSpaceStation", selectedIndices[4] == 0);
+                    ModifyBool(extraPlanetsConfig, "B:\"Venus SpaceStation\"", selectedIndices[4] != 0, true);
+                    ModifyBool(galaxySpaceConfig, "B:enableVenusSpaceStation", selectedIndices[4] == 0, true);
                     var front = "galaxyspace:";
                     var back = "space_suit_";
                     var galaxySpaceSuits = new List<string> {
@@ -267,51 +268,82 @@ class Program
                             $"{front}{tier}_{back}legings", $"{front}{tier}_{back}boots", $"{front}{tier}_{back}gravity_boots"
                         ]);
                     }
-                    ModifyList($"{ParentDir}\\ExtraPlanets.cfg", "S:\"List of armour items to be considered as a space suit\" <", galaxySpaceSuits);
-                    ModifyList($"{ParentDir}\\GalaxySpace\\core.conf", "S:\"Radiation and Pressure Armor List\" <", extraPlanetsSuits);
+                    ModifyList($"{ConfigPath}\\ExtraPlanets.cfg", "S:\"List of armour items to be considered as a space suit\" <", galaxySpaceSuits);
+                    ModifyList($"{ConfigPath}\\GalaxySpace\\core.conf", "S:\"Radiation and Pressure Armor List\" <", extraPlanetsSuits);
                 }
                 else
                 {
-                    ModifyBool(extraPlanetsConfig, "B:\"Mars SpaceStation\"", true);
-                    ModifyBool(extraPlanetsConfig, "B:\"Venus SpaceStation\"", true);
+                    ModifyBool(extraPlanetsConfig, "B:\"Mars SpaceStation\"", true, true);
+                    ModifyBool(extraPlanetsConfig, "B:\"Venus SpaceStation\"", true, true);
                 }
-                ModifyBool(extraPlanetsConfig, "B:\"Enable More Planets Compatibility\"", selectedOptions.Contains("更多行星"));
-                ModifyBool(extraPlanetsConfig, "B:\"Use Custom Galaxy Map/Celestial Selection Screen\"", Options[1][selectedIndices[2]] == "额外行星");
+                ModifyBool(extraPlanetsConfig, "B:\"Enable More Planets Compatibility\"", selectedOptions.Contains("更多行星"), false);
+                ModifyBool(extraPlanetsConfig, "B:\"Use Custom Galaxy Map/Celestial Selection Screen\"", Options[1][selectedIndices[2]] == "额外行星", true);
             }
 
             void ConfigureAsmodeusCore()
             {
-                string asmodeusCoreConfig = $"{ParentDir}\\AsmodeusCore\\core.conf";
+                string asmodeusCoreConfig = $"{ConfigPath}\\AsmodeusCore\\core.conf";
 
-                ModifyBool(asmodeusCoreConfig, "B:enableNewGalaxyMap", Options[1][selectedIndices[2]] == "AsmodeusCore（星空）");
+                ModifyBool(asmodeusCoreConfig, "B:enableNewGalaxyMap", Options[1][selectedIndices[2]] == "AsmodeusCore（星空）", true);
 
                 bool enableSkyFeatures = selectedIndices[7] != 0;
-                ModifyBool(asmodeusCoreConfig, "B:enableSkyAsteroids", enableSkyFeatures);
-                ModifyBool(asmodeusCoreConfig, "B:enableSkyMoon", enableSkyFeatures);
-                ModifyBool(asmodeusCoreConfig, "B:enableSkyOverworld", enableSkyFeatures);
-                ModifyBool(asmodeusCoreConfig, "B:enableSkyOverworldOrbit", enableSkyFeatures);
+                ModifyBool(asmodeusCoreConfig, "B:enableSkyAsteroids", enableSkyFeatures, true);
+                ModifyBool(asmodeusCoreConfig, "B:enableSkyMoon", enableSkyFeatures, true);
+                ModifyBool(asmodeusCoreConfig, "B:enableSkyOverworld", enableSkyFeatures, true);
+                ModifyBool(asmodeusCoreConfig, "B:enableSkyOverworldOrbit", enableSkyFeatures, true);
             }
 
             void ConfigureSolarSystem()
             {
-                ModifyBool($"{ParentDir}\\Sol\\sol.conf", "B:\"Enable Custom Galaxymap?\"", Options[1][selectedIndices[2]] == "太阳系");
+                ModifyBool($"{ConfigPath}\\Sol\\sol.conf", "B:\"Enable Custom Galaxymap?\"", Options[1][selectedIndices[2]] == "太阳系", true);
             }
 
             void ConfigureGalaxySpace()
             {
-                string galaxySpaceConfig = $"{ParentDir}\\GalaxySpace\\core.conf";
-                string galaxySpaceDimensionsConfig = $"{ParentDir}\\GalaxySpace\\dimensions.conf";
+                string galaxySpaceConfig = $"{ConfigPath}\\GalaxySpace\\core.conf";
+                string galaxySpaceDimensionsConfig = $"{ConfigPath}\\GalaxySpace\\dimensions.conf";
 
                 if (!selectedOptions.Contains("额外行星"))
                 {
-                    ModifyBool(galaxySpaceDimensionsConfig, "B:enableMarsSpaceStation", true);
-                    ModifyBool(galaxySpaceDimensionsConfig, "B:enableVenusSpaceStation", true);
+                    ModifyBool(galaxySpaceDimensionsConfig, "B:enableMarsSpaceStation", true, true);
+                    ModifyBool(galaxySpaceDimensionsConfig, "B:enableVenusSpaceStation", true, true);
                 }
 
-                ModifyBool(galaxySpaceConfig, "B:enableNewMenu", selectedIndices[5] == 0);
-                ModifyBool(galaxySpaceConfig, "B:enableAdvancedRocketCraft", selectedIndices[6] == 0);
+                ModifyBool(galaxySpaceConfig, "B:enableNewMenu", selectedIndices[5] == 0, true);
+                ModifyBool(galaxySpaceConfig, "B:enableAdvancedRocketCraft", selectedIndices[6] == 0, true);
             }
-
+            bool planetprogression = false;
+            bool galacticresearch = false;
+            foreach (string jarFilePath in Directory.GetFiles(ConfigPath.Replace("\\config", "\\mods"), "*.jar"))
+            {
+                using ZipArchive archive = ZipFile.OpenRead(jarFilePath);
+                ZipArchiveEntry? mcmodInfoEntry = archive.Entries.FirstOrDefault(e => e.FullName.EndsWith("mcmod.info", StringComparison.OrdinalIgnoreCase));
+                if (mcmodInfoEntry != null)
+                {
+                    using StreamReader reader = new(mcmodInfoEntry.Open());
+                    string jsonContent = reader.ReadToEnd();
+                    JArray modArray = JArray.Parse(jsonContent);
+                    if (modArray.Count > 0 && modArray[0] is JObject modObject)
+                    {
+                        string? modId = modObject["modid"]?.ToString();
+                        switch (modId)
+                        {
+                            case "planetprogression":
+                                planetprogression = true;
+                                break;
+                            case "galacticresearch":
+                                galacticresearch = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            if (planetprogression && galacticresearch) Console.WriteLine($"\n{red}检测到你安装了PlanetProgression和GalacticResearch，这两个模组都会让你的星图只有一个星球，请删除一个。其他的星球需要你自行研究，如不想研究请全部删除{reset}");
+            else if (planetprogression || galacticresearch)
+            {
+                string modName = planetprogression ? "PlanetProgression" : "GalacticResearch";
+                Console.WriteLine($"\n{red}检测到你安装了{modName}，这个模组会让你的星图只有一个星球。其他的星球需要你自行研究，如不想研究请删除{reset}");
+            }
             Console.WriteLine($"\n\n{bold}更多配置请手动修改配置文件，参考：https://www.mcmod.cn/post/2728.html的解决重复天体(1.8)和附属加载顺序(1.9)部分{reset}\n\n\n{green}按下任意键退出...{reset}");
             Console.ReadKey();
             Environment.Exit(0);
@@ -340,7 +372,7 @@ class Program
         {
             1 => Options[0],
             2 => Options[1],
-            3 or 4=> Options[2],
+            3 or 4 => Options[2],
             5 or 6 or 7 => Options[3],
             _ => [$"{red}加载失败"]
         };
