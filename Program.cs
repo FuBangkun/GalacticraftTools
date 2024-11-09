@@ -22,22 +22,17 @@ class Program
     static readonly int[] selectedIndicesSet = new int[10];
     static int Index;
     static int Number = 1;
-    const string bold = "\x1b[1m";
-    const string red = $"{bold}\x1b[31m";
-    const string green = $"{bold}\x1b[32m";
-    const string yellow = $"{bold}\x1b[33m";
-    const string reset = "\x1b[0m";
 
     static void Main()
     {
         Console.Title = "星系附属兼容问题解决工具";
         if (Path.GetFileNameWithoutExtension(ConfigPath) != "config")
         {
-            Console.WriteLine($"{red}程序不在config文件夹下\r\n请输入config文件夹所在路径{reset}");
+            WriteLine("程序不在config文件夹下\r\n请输入config文件夹所在路径", ConsoleColor.Red);
             string? input = Console.ReadLine();
             while (input == null || Path.GetFileNameWithoutExtension(input) != "config")
             {
-                Console.WriteLine($"{red}路径错误，请输入config文件夹的正确路径{reset}");
+                WriteLine("路径错误，请输入config文件夹的正确路径", ConsoleColor.Red);
                 input = Console.ReadLine();
             }
             ConfigPath = input;
@@ -45,7 +40,8 @@ class Program
 
         Console.CursorVisible = false;
         Console.Clear();
-        Console.WriteLine($"欢迎使用星系附属兼容工具，本工具由付邦坤制作并发布于MC百科社群（https://bbs.mcmod.cn/thread-19017-1-1.html），旨在解决星系模组间的兼容问题以提升游戏体验。本工具完全免费，鼓励分享但严禁商业用途，误购请立即联系退款。目前支持星空、额外行星、更多行星、太阳系、AsmodeusCore等模组，其他模组基本兼容。需注意，太阳系模组可能导致游戏崩溃，本工具仅优化其星图配置。未来计划移除重复天体并增加对1.7.10的支持，敬请期待（手动修改可参考：https://www.mcmod.cn/post/2728.html）。如觉本工具有用，请在Github（https://github.com/FuBangkun/GalacticraftTools）给予Star支持，感谢！\r\n\r\n{green}按下任意键继续...{reset}");
+        Console.WriteLine($"欢迎使用星系附属兼容工具，本工具由付邦坤制作并发布于MC百科社群（https://bbs.mcmod.cn/thread-19017-1-1.html），旨在解决星系模组间的兼容问题以提升游戏体验。本工具完全免费，鼓励分享但严禁商业用途，误购请立即联系退款。目前支持星空、额外行星、更多行星、太阳系、AsmodeusCore等模组，其他模组基本兼容。需注意，太阳系模组可能导致游戏崩溃，本工具仅优化其星图配置。未来计划移除重复天体并增加对1.7.10的支持，敬请期待（手动修改可参考：https://www.mcmod.cn/post/2728.html）。如觉本工具有用，请在Github（https://github.com/FuBangkun/GalacticraftTools）给予Star支持，感谢！\r\n");
+        WriteLine("按下任意键继续...", ConsoleColor.Green);
         Console.ReadKey();
         UpdateMenuIndex(0, 0);
 
@@ -70,7 +66,7 @@ class Program
                             break;
                         case ConsoleKey.Escape:
                             Console.Clear();
-                            Console.WriteLine($"{red}按下回车键确认退出，按其他键返回...{reset}");
+                            WriteLine("按下回车键确认退出，按其他键返回...", ConsoleColor.Red);
                             if (Console.ReadKey(true).Key == ConsoleKey.Enter) Environment.Exit(0);
                             break;
                         case ConsoleKey.Enter:
@@ -91,7 +87,8 @@ class Program
                             Console.Clear();
                             if (selectedOptions1.Count < 2)
                             {
-                                Console.WriteLine((selectedOptions1.Count == 0 ? $"{red}你没有选择任何模组" : $"{red}请选择至少两个模组") + $"\r\n\r\n{green}按下任意键返回...{reset}");
+                                WriteLine(selectedOptions1.Count == 0 ? "你没有选择任何模组" : "请选择至少两个模组", ConsoleColor.Red);
+                                WriteLine("\r\n按下任意键返回...", ConsoleColor.Green);
                                 continue;
                             }
                             HashSet<string> options = [.. Options[2]];
@@ -104,7 +101,7 @@ class Program
                                     if (addToOptions) options.Add(optionName == "AsmodeusCore" ? "AsmodeusCore（星空）" : optionName);
                                     if (!File.Exists(Path.Combine(ConfigPath + dirModifier, fileName)))
                                     {
-                                        Console.WriteLine($"{red}未检测到{optionName}配置文件，请安装{optionName}并运行一次游戏以生成配置文件。{reset}");
+                                        WriteLine($"未检测到{optionName}配置文件，请安装{optionName}并运行一次游戏以生成配置文件。", ConsoleColor.Red);
                                         errorCount++;
                                     }
                                 }
@@ -119,7 +116,8 @@ class Program
                             Array.Sort(Options[2]);
                             if (errorCount > 0)
                             {
-                                Console.WriteLine($"{red}{errorCount}个错误\r\n{green}按下任意键退出...{reset}");
+                                WriteLine($"{errorCount}个错误", ConsoleColor.Red);
+                                WriteLine("按下任意键退出...", ConsoleColor.Red);
                                 Console.ReadKey();
                                 return;
                             }
@@ -200,7 +198,8 @@ class Program
                             Console.Clear();
                             if (selectedOptions2.Count < 2)
                             {
-                                Console.WriteLine((selectedOptions2.Count == 0 ? $"{red}你没有选择任何模组" : $"{red}请选择至少两个模组") + $"\r\n\r\n{green}按下任意键返回...{reset}");
+                                WriteLine(selectedOptions1.Count == 0 ? "你没有选择任何模组" : "请选择至少两个模组", ConsoleColor.Red);
+                                WriteLine("\r\n按下任意键返回...", ConsoleColor.Green);
                                 continue;
                             }
                             HashSet<string> options = [.. Options[6]];
@@ -224,7 +223,8 @@ class Program
                             Array.Sort(Options[6]);
                             if (errorCount > 0)
                             {
-                                Console.WriteLine($"{errorCount}个错误\r\n{green}按下任意键退出...{reset}");
+                                Write($"{errorCount}个错误");
+                                WriteLine("按下任意键退出...", ConsoleColor.Green);
                                 Console.ReadKey();
                                 return;
                             }
@@ -280,7 +280,7 @@ class Program
 
     static void ApplyChanges()
     {
-        Console.WriteLine($"{green}按下任意键确认更改，ESC键返回...{reset}");
+        WriteLine($"按下任意键确认更改，ESC键返回...", ConsoleColor.Green);
         var key = Console.ReadKey(true);
         if (key.Key == ConsoleKey.Escape) UpdateMenuIndex(7, 0);
         else
@@ -289,36 +289,40 @@ class Program
             string[] lines;
             int error = 0;
 
+            string modsFloder = ConfigPath.Replace("\\config", "\\mods");
             bool planetprogression = false;
             bool galacticresearch = false;
             bool thaumcraft = false;
             bool beyondspace = false;
-            foreach (string jarFilePath in Directory.GetFiles(ConfigPath.Replace("\\config", "\\mods"), "*.jar"))
+            if (File.Exists(modsFloder))
             {
-                using ZipArchive archive = ZipFile.OpenRead(jarFilePath);
-                ZipArchiveEntry? mcmodInfoEntry = archive.Entries.FirstOrDefault(e => e.FullName.EndsWith("mcmod.info", StringComparison.OrdinalIgnoreCase));
-                if (mcmodInfoEntry != null)
+                foreach (string jarFilePath in Directory.GetFiles(modsFloder, "*.jar"))
                 {
-                    using StreamReader reader = new(mcmodInfoEntry.Open());
-                    string jsonContent = reader.ReadToEnd();
-                    JArray modArray = JArray.Parse(jsonContent);
-                    if (modArray.Count > 0 && modArray[0] is JObject modObject)
+                    using ZipArchive archive = ZipFile.OpenRead(jarFilePath);
+                    ZipArchiveEntry? mcmodInfoEntry = archive.Entries.FirstOrDefault(e => e.FullName.EndsWith("mcmod.info", StringComparison.OrdinalIgnoreCase));
+                    if (mcmodInfoEntry != null)
                     {
-                        string? modId = modObject["modid"]?.ToString();
-                        switch (modId)
+                        using StreamReader reader = new(mcmodInfoEntry.Open());
+                        string jsonContent = reader.ReadToEnd();
+                        JArray modArray = JArray.Parse(jsonContent);
+                        if (modArray.Count > 0 && modArray[0] is JObject modObject)
                         {
-                            case "planetprogression":
-                                planetprogression = true;
-                                break;
-                            case "galacticresearch":
-                                galacticresearch = true;
-                                break;
-                            case "Thaumcraft":
-                                thaumcraft = true;
-                                break;
-                            case "beyondspace":
-                                beyondspace = true;
-                                break;
+                            string? modId = modObject["modid"]?.ToString();
+                            switch (modId)
+                            {
+                                case "planetprogression":
+                                    planetprogression = true;
+                                    break;
+                                case "galacticresearch":
+                                    galacticresearch = true;
+                                    break;
+                                case "Thaumcraft":
+                                    thaumcraft = true;
+                                    break;
+                                case "beyondspace":
+                                    beyondspace = true;
+                                    break;
+                            }
                         }
                     }
                 }
@@ -335,14 +339,21 @@ class Program
                     {
                         string currentValue = trimmedLine[(keyToFind + "=").Length..].Trim();
                         lines[i] = "    " + keyToFind + $"={value}";
-                        Console.Write($"已修改{yellow}{keyToFind}{reset}为{red}{value}{reset}，修改前为{red}{currentValue}{reset}，默认为{red}{defaultValue.ToString().ToLower()}{reset}\r\n");
+                        Write("已修改");
+                        Write(keyToFind, ConsoleColor.Yellow);
+                        Write("为");
+                        Write(value, ConsoleColor.Red);
+                        Write("，修改前为");
+                        Write(currentValue, ConsoleColor.Red);
+                        Write("，默认为");
+                        WriteLine(defaultValue.ToString().ToLower(), ConsoleColor.Red);
                         foundAndModified = true;
                         break;
                     }
                 }
                 if (!foundAndModified)
                 {
-                    Console.WriteLine($"{red}无法找到{keyToFind}{reset}");
+                    WriteLine($"无法找到{keyToFind}", ConsoleColor.Red);
                     error++;
                 }
                 File.WriteAllLines(configFilePath, lines);
@@ -383,10 +394,14 @@ class Program
                 }
                 if (!foundAndModified)
                 {
-                    Console.WriteLine($"{red}无法找到{keyToFind[..^2]}{reset}");
+                    WriteLine($"无法找到{keyToFind[..^2]}", ConsoleColor.Red);
                     error++;
                 }
-                else Console.WriteLine($"已修改{yellow}{keyToFind[..^2]}{reset}");
+                else
+                {
+                    Write("已修改");
+                    WriteLine(keyToFind[..^2], ConsoleColor.Yellow);
+                }
                 File.WriteAllText(configFilePath, sb.ToString());
             }
 
@@ -403,7 +418,8 @@ class Program
                 if (selectedOptions2.Contains("星空")) ConfigureGalaxySpace2();
                 if (selectedOptions2.Contains("更多行星")) ConfigureMorePlanets();
             }
-            Console.WriteLine(error != 0 ? $"{red}{error}个错误{reset}" : $"{green}没有错误{reset}");
+            if (error != 0) WriteLine($"{error}个错误", ConsoleColor.Red);
+            else WriteLine($"没有错误", ConsoleColor.Green);
 
             void ConfigureExtraPlanets1()
             {
@@ -499,9 +515,10 @@ class Program
                 if (File.Exists(BiomesConfig))
                 {
                     File.WriteAllText(BiomesConfig, "# Configuration file\r\n\r\ngeneral {\r\n    # Global ID Biome for Planets/Moons\r\n    I:IDSpaceBiome=214\r\n     \r\n    # Global ID Biome for Planets/Moons (Shallow Waters Biome)\r\n    I:IDSpaceShallowWatersBiome=215\r\n     \r\n    # Global ID Biome for Planets/Moons (Oceans Biome)\r\n    I:IDSpaceOceansBiome=216\r\n     \r\n    # Global ID Biome for Planets/Moons (Deep Oceans Biome)\r\n    I:IDSpaceDeepOceansBiome=217\r\n     \r\n    # Global ID Biome for Planets/Moons (Low Plains Biome)\r\n    I:IDSpaceLowPlainsBiome=218\r\n     \r\n    # Global ID Biome for Planets/Moons (Mid Plains Biome)\r\n    I:IDSpaceMidPlainsBiome=219\r\n     \r\n    # Global ID Biome for Planets/Moons (Low Hills Biome)\r\n    I:IDSpaceLowHillsBiome=220\r\n     \r\n    # Global ID Biome for Planets/Moons (High Plateaus Biome)\r\n    I:IDSpaceHighPlateausBiome=221\r\n     \r\n    # Global ID Biome for Planets/Moons (Mid Hills Biome)\r\n    I:IDSpaceMidHillsBiome=222\r\n     \r\n    # Global ID Biome for Planets/Moons (Rocky Waters Biome)\r\n    I:IDSpaceRockyWatersBiome=223\r\n     \r\n    # Global ID Biome for Planets/Moons (Low Islands Biome)\r\n    I:IDSpaceLowIslandsBiome=224\r\n     \r\n    # Global ID Biome for Planets/Moons (Partially Submerged Biome)\r\n    I:IDSpacePartiallySubmergedBiome=225\r\n     \r\n    # Global ID Biome for Planets/Moons (Beach Biome)\r\n    I:IDSpaceBeachBiome=226\r\n     \r\n    # Biome ID for World Engine\r\n    I:IDWorldEngineBiome=227\r\n}");
-                    Console.WriteLine($"已修改{yellow}GalaxySpace\\biomes.conf{reset}");
+                    Write($"已修改");
+                    WriteLine("GalaxySpace\\biomes.conf", ConsoleColor.Yellow);
                 }
-                else Console.WriteLine($"{red}未找到{yellow}GalaxySpace\\biomes.conf{reset}");
+                else WriteLine($"无法找到GalaxySpace\\biomes.conf", ConsoleColor.Red);
 
                 Modify(CoreConfig, "B:enableNewMenu", (selectedIndices[5] == 0).ToString().ToLower(), "true");
                 Modify(CoreConfig, "B:enableSkyOverworld", (selectedIndices[7] != 0).ToString().ToLower(), "true");
@@ -512,30 +529,17 @@ class Program
                 if (selectedOptions2.Contains("星空") || selectedOptions2.Contains("额外行星")) Modify(ConfigPath + "\\MorePlanets.cfg", "B:\"Enable Mars Space Station\"", (selectedIndices[9] == 1).ToString().ToLower(), "true");
             }
 
-            if (planetprogression && galacticresearch) Console.WriteLine($"\r\n{red}检测到你安装了PlanetProgression和GalacticResearch，这两个模组都会让你的星图只有一个星球，请删除一个。其他的星球需要你自行研究，如不想研究请全部删除。{reset}");
-            else if (planetprogression || galacticresearch) Console.WriteLine($"\r\n{red}检测到你安装了" + (planetprogression ? "PlanetProgression" : "GalacticResearch") + $"，这个模组会让你的星图只有一个星球。其他的星球需要你自行研究，如不想研究请删除。{reset}");
-            if (beyondspace) Console.WriteLine($"\r\n{red}检测到你安装了Beyond Space(Galaxy Additions)，请确保星空的版本为1.2.14，否则游戏会崩溃。{reset}");
-            Console.WriteLine($"\r\n\r\n{bold}更多配置请手动修改配置文件，参考：https://www.mcmod.cn/post/2728.html的解决重复天体" + (selectedIndices[0] == 0 ? "(1.8)和附属加载顺序(1.9)" : "(2.4)和附属加载顺序(2.5)") + $"部分{reset}\r\n\r\n\r\n{green}按下任意键退出...{reset}");
+            if (File.Exists(modsFloder))
+            {
+                if (planetprogression && galacticresearch) WriteLine($"\r\n检测到你安装了PlanetProgression和GalacticResearch，这两个模组都会让你的星图只有一个星球，请删除一个。其他的星球需要你自行研究，如不想研究请全部删除。", ConsoleColor.Red);
+                else if (planetprogression || galacticresearch) WriteLine($"\r\n检测到你安装了" + (planetprogression ? "PlanetProgression" : "GalacticResearch") + "，这个模组会让你的星图只有一个星球。其他的星球需要你自行研究，如不想研究请删除。", ConsoleColor.Red);
+                if (beyondspace) WriteLine($"\r\n检测到你安装了Beyond Space(Galaxy Additions)，请确保星空的版本为1.2.14，否则游戏会崩溃。", ConsoleColor.Red);
+            }
+            Console.WriteLine("\r\n\r\n更多配置请手动修改配置文件，参考：https://www.mcmod.cn/post/2728.html的解决重复天体" + (selectedIndices[0] == 0 ? "(1.8)和附属加载顺序(1.9)" : "(2.4)和附属加载顺序(2.5)") + "部分");
+            WriteLine("\r\n\r\n按下任意键退出...", ConsoleColor.Green);
             Console.ReadKey();
             Environment.Exit(0);
         }
-    }
-
-    static string GetPrompt(int index)
-    {
-        string specificPrompt = index switch
-        {
-            0 => "选择游戏版本",
-            1 or 8 => "选择安装的附属",
-            2 => "选择星图",
-            3 or 9 => "选择火星空间站",
-            4 => "选择金星空间站",
-            5 => "是否启用星空新主菜单",
-            6 => "是否启用星空2~6阶困难火箭配方",
-            7 => "是否要安装光影（仅防止与光影存在冲突，不会下载光影）",
-            _ => $"{red}加载失败"
-        };
-        return $"{bold}{Number}." + (index == 0 ? specificPrompt + $"{reset}\r\nESC退出" : specificPrompt + $"{reset}\r\nESC返回") + " 空格选择/取消 ↑↓切换选项 回车确认\r\n";
     }
 
     static string[] GetOptions()
@@ -549,7 +553,7 @@ class Program
             5 or 6 or 7 => Options[4],
             8 => Options[5],
             9 => Options[6],
-            _ => [$"{red}加载失败"]
+            _ => []
         };
     }
 
@@ -564,11 +568,30 @@ class Program
     static void RenderMenu(string[] options, int index)
     {
         Console.Clear();
-        Console.WriteLine(GetPrompt(Index));
+        string specificPrompt = index switch
+        {
+            0 => "选择游戏版本",
+            1 or 8 => "选择安装的附属",
+            2 => "选择星图",
+            3 or 9 => "选择火星空间站",
+            4 => "选择金星空间站",
+            5 => "是否启用星空新主菜单",
+            6 => "是否启用星空2~6阶困难火箭配方",
+            7 => "是否要安装光影（仅防止与光影存在冲突，不会下载光影）",
+            _ => "加载失败"
+        };
+        if (specificPrompt == "加载失败") { WriteLine(specificPrompt, ConsoleColor.Red); return; }
+        WriteLine($"{Number}." + (index == 0 ? specificPrompt + "\r\nESC退出" : specificPrompt + "\r\nESC返回") + " 空格选择/取消 ↑↓切换选项 回车确认\r\n");
         for (int i = 0; i < options.Length; i++)
         {
-            string prefix = ((Index == 1) && selectedOptions1.Contains(options[i])) || ((Index == 8) && selectedOptions2.Contains(options[i])) || ((Index != 1 || Index != 8) && i == selectedIndices[index]) ? "[X] " : "[ ] "; ;
-            Console.WriteLine(i == selectedIndicesSet[index] ? $"\x1b[44m{prefix}{options[i]}{reset}" : prefix + options[i]);
+            string prefix = ((Index == 1) && selectedOptions1.Contains(options[i])) || ((Index == 8) && selectedOptions2.Contains(options[i])) || ((Index != 1 || Index != 8) && i == selectedIndices[index]) ? "[X] " : "[ ] ";
+            if (i == selectedIndicesSet[index])
+            {
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine(prefix + options[i]);
+                Console.ResetColor();
+            }
+            else Console.WriteLine(prefix + options[i]);
         }
     }
 
@@ -592,5 +615,18 @@ class Program
             if (selectedOptions2.Contains(options[selectedIndicesSet[8]])) selectedOptions2.Remove(options[selectedIndicesSet[8]]);
             else selectedOptions2.Add(options[selectedIndicesSet[8]]);
         }
+    }
+
+    static void WriteLine(string message, ConsoleColor color = ConsoleColor.White)
+    {
+        Console.ForegroundColor = color;
+        Console.WriteLine(message);
+        Console.ResetColor();
+    }
+    static void Write(string message, ConsoleColor color = ConsoleColor.White)
+    {
+        Console.ForegroundColor = color;
+        Console.Write(message);
+        Console.ResetColor();
     }
 }
