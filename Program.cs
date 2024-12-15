@@ -40,7 +40,7 @@ class Program
 
         Console.CursorVisible = false;
         Console.Clear();
-        Console.WriteLine($"欢迎使用星系附属兼容工具，本工具由付邦坤制作并发布于MC百科社群（https://bbs.mcmod.cn/thread-19017-1-1.html），旨在解决星系模组间的兼容问题以提升游戏体验。本工具完全免费，鼓励分享但严禁商业用途，误购请立即联系退款。目前支持星空、额外行星、更多行星、太阳系、AsmodeusCore等模组，其他模组基本兼容。需注意，太阳系模组可能导致游戏崩溃，本工具仅优化其星图配置。未来计划移除重复天体并增加对1.7.10的支持，敬请期待（手动修改可参考：https://www.mcmod.cn/post/2728.html）。如觉本工具有用，请在Github（https://github.com/FuBangkun/GalacticraftTools）给予Star支持，感谢！\r\n");
+        Console.WriteLine($"本工具已暂停更新，请移步至星系兼容（https://www.mcmod.cn/class/17145.html）以获得更好的体验。\r\n");
         WriteLine("按下任意键继续...", ConsoleColor.Green);
         Console.ReadKey();
         UpdateMenuIndex(0, 0);
